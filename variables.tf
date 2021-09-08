@@ -1,9 +1,11 @@
 variable project_id {
   description = "GCP project ID"
+  default = null 
 }
 
 variable auth_file {
   description = "GCP Project auth file"
+  default = null 
 }
 
 variable region {}
@@ -45,6 +47,7 @@ variable public_key_path {
 
 variable authcodes {
   description = "Enter a VM-Series authcode that has been registered with the Palo Alto Networks support site. Enter any value if using PAYGO marketplace images."
+  default = null 
 }
 
 variable fw_bootstrap_path {}
