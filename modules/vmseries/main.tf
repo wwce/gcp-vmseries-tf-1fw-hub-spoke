@@ -22,8 +22,7 @@ resource "google_compute_instance" "main" {
 
   metadata = merge({
     mgmt-interface-swap                  = "enable"
-    vmseries-bootstrap-gce-storagebucket = each.value.bootstrap_bucket 
-    #vmseries-bootstrap-gce-storagebucket = var.bootstrap_bucket
+    vmseries-bootstrap-gce-storagebucket = each.value.bootstrap_bucket
     serial-port-enable                   = true
     ssh-keys                             = var.ssh_key
   }, var.metadata)

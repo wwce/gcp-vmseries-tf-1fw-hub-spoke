@@ -87,7 +87,7 @@ resource "google_compute_network_peering" "trust_to_spoke2" {
   name         = "${module.vpc_trust.vpc_name}-${module.vpc_spoke2.vpc_name}"
   network      = module.vpc_trust.vpc_id
   peer_network = module.vpc_spoke2.vpc_id
-export_custom_routes = true
+  export_custom_routes = true
   import_custom_routes = false 
 }
 
@@ -100,7 +100,7 @@ resource "google_compute_instance" "spoke1" {
   zone                      = data.google_compute_zones.main.names[0]
   can_ip_forward            = false
   allow_stopping_for_update = true
-  metadata_startup_script   = file("${path.module}/bootstrap_files/webserver-startup.sh")
+  metadata_startup_script   = file("${path.module}/bootstrap_files/ubuntu_credentials.sh")
 
   metadata = {
     serial-port-enable = true
@@ -131,6 +131,7 @@ resource "google_compute_instance" "spoke2" {
   zone                      = data.google_compute_zones.main.names[0]
   can_ip_forward            = false
   allow_stopping_for_update = true
+  metadata_startup_script   = file("${path.module}/bootstrap_files/ubuntu_credentials.sh")
 
   metadata = {
     serial-port-enable = true

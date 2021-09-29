@@ -45,9 +45,11 @@ variable public_key_path {
   description = "Local path to public SSH key.  If you do not have a public key, run >> ssh-keygen -f ~/.ssh/demo-key -t rsa -C admin"
 }
 
-variable authcodes {
+variable fw_authcodes {
   description = "Enter a VM-Series authcode that has been registered with the Palo Alto Networks support site. Enter any value if using PAYGO marketplace images."
   default = null 
 }
 
-variable fw_bootstrap_path {}
+variable fw_bootstrap_bucket {
+  default = null
+}

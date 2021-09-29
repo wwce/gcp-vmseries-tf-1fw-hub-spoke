@@ -1,28 +1,21 @@
 # --------------------------------------------------------------------------------------------------------------------------
-# Create bootstrap bucket for VM-Series and create VM-Series firewalls. 
-
-module "bootstrap_common" {
-  source        = "./modules/gcp_bootstrap/"
-  bucket_name   = "${local.prefix}-bootstrap"
-  file_location = var.fw_bootstrap_path
-  config        = ["init-cfg.txt", "bootstrap.xml"]
-  authcodes     = var.authcodes
-}
+# Create bootstrap bucket for VM-Series and create VM-Series firewalls. \
 
 module "vmseries_common" {
   source = "./modules/vmseries/"
-
-  ssh_key               = fileexists(var.public_key_path) ? "admin:${file(var.public_key_path)}" : ""
+  image_prefix_uri      = "https://www.googleapis.com/compute/v1/projects/panw-gcp-team-testing/global/images/"
   image_name            = var.fw_image_name
   machine_type          = var.fw_machine_type
   create_instance_group = true
-
+  project               = var.project_id
+  ssh_key               = fileexists(var.public_key_path) ? "admin:${file(var.public_key_path)}" : ""
+  
   instances = {
 
     vmseries01 = {
       name             = "${local.prefix}-vmseries01"
       zone             = data.google_compute_zones.main.names[0]
-      bootstrap_bucket = module.bootstrap_common.bucket_name
+      bootstrap_bucket = "" #var.fw_bootstrap_bucket
       network_interfaces = [
         {
           subnetwork = module.vpc_untrust.subnet_self_link["untrust-${var.region}"]
@@ -40,10 +33,12 @@ module "vmseries_common" {
     }
   }
 
-  depends_on = [
-    module.bootstrap_common
-  ]
+  depends_on = []
 }
+
+
+# --------------------------------------------------------------------------------------------------------------------------
+# Set default route to VM-Series within the trust VPC network
 
 resource "google_compute_route" "route_common" {
   name              = "${local.prefix}-route"
@@ -54,18 +49,28 @@ resource "google_compute_route" "route_common" {
 }
 
 
-
 # --------------------------------------------------------------------------------------------------------------------------
 # Outputs to terminal
 
+# output "WEB_VM_NETWORK_A" {
+#   value = "http://${module.vmseries_common.nic0_ips["vmseries01"]}"
+# }
 
-output "WEB_VM_NETWORK_A" {
-  value = "http://${module.vmseries_common.nic1_ips["vmseries01"]}"
-}
-output "SSH_VM_NETWORK_C" {
+output "SSH_NETWORK_C" {
   value = "ssh ${var.vm_user}@${module.vmseries_common.nic0_ips["vmseries01"]} -i ${trim(var.public_key_path, ".pub")}"
 }
 
-output "MGMT_FW" {
+output "VMSERIES_ACCESS" {
   value = "https://${module.vmseries_common.nic1_ips["vmseries01"]}"
 }
+
+output "VMSERIES_USERNAME" {
+  value = "paloalto"
+}
+
+output "VMSERIES_PASSWORD" {
+  value = "Pal0Alt0@123"
+}
+
+# wget www.eicar.org/download/eicar.com.txt
+# curl http://10.1.0.10/cgi-bin/../../../..//bin/cat%20/etc/passwd
