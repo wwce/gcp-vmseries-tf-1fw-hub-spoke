@@ -3,7 +3,6 @@
 prefix                    = "panw-ce"
 public_key_path           = "~/.ssh/gcp-demo.pub"
 fw_image_name             = "vmseries-1010-bundle2-ce360"
-fw_bootstrap_bucket       = "vmseries-bootstrap-ce360"
 fw_machine_type           = "n1-standard-4"
 fw_authcodes              = null 
 
