@@ -31,12 +31,12 @@ variable vm_scopes {
 
 module "vpc_spoke1" {
   source               = "./modules/vpc/"
-  vpc                  = "${local.prefix}-spoke1-vpc"
+  vpc                  = "${local.prefix}-vpc-A"
   delete_default_route = true
   allowed_sources      = ["0.0.0.0/0"]
 
   subnets = {
-    "spoke1-${var.region}" = {
+    "vpc-A-${var.region}" = {
       region = var.region,
       cidr   = var.cidrs_spoke1[0]
     }
@@ -62,12 +62,12 @@ resource "google_compute_network_peering" "trust_to_spoke1" {
 
 module "vpc_spoke2" {
   source               = "./modules/vpc/"
-  vpc                  = "${local.prefix}-spoke2-vpc"
+  vpc                  = "${local.prefix}-vpc-B"
   delete_default_route = true
   allowed_sources      = ["0.0.0.0/0"]
 
   subnets = {
-    "spoke2-${var.region}" = {
+    "vpc-B-${var.region}" = {
       region = var.region,
       cidr   = var.cidrs_spoke2[0]
     }
@@ -95,7 +95,7 @@ resource "google_compute_network_peering" "trust_to_spoke2" {
 # Create a ubuntu GCE instance in each spoke network.
 
 resource "google_compute_instance" "spoke1" {
-  name                      = "${local.prefix}-spoke1-vm1"
+  name                      = "${local.prefix}-vpc-A-vm1"
   machine_type              = var.vm_type
   zone                      = data.google_compute_zones.main.names[0]
   can_ip_forward            = false
@@ -108,7 +108,7 @@ resource "google_compute_instance" "spoke1" {
   }
 
   network_interface {
-    subnetwork = module.vpc_spoke1.subnet_self_link["spoke1-${var.region}"]
+    subnetwork = module.vpc_spoke1.subnet_self_link["vpc-A-${var.region}"]
     network_ip = cidrhost(var.cidrs_spoke1[0], 10)
   }
 
@@ -126,7 +126,7 @@ resource "google_compute_instance" "spoke1" {
 
 
 resource "google_compute_instance" "spoke2" {
-  name                      = "${local.prefix}-spoke2-vm1"
+  name                      = "${local.prefix}-vpc-B-vm1"
   machine_type              = var.vm_type
   zone                      = data.google_compute_zones.main.names[0]
   can_ip_forward            = false
@@ -139,7 +139,7 @@ resource "google_compute_instance" "spoke2" {
   }
 
   network_interface {
-    subnetwork = module.vpc_spoke2.subnet_self_link["spoke2-${var.region}"]
+    subnetwork = module.vpc_spoke2.subnet_self_link["vpc-B-${var.region}"]
     network_ip = cidrhost(var.cidrs_spoke2[0], 10)
   }
 

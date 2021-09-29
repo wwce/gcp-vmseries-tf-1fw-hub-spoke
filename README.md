@@ -20,7 +20,7 @@ In your project, open GCP Cloud Terminal and run the following.
 ```
 $ gcloud services enable compute.googleapis.com
 $ ssh-keygen -f ~/.ssh/gcp-demo -t rsa -C gcp-demo
-$ git clone https://github.com/wwce/gcp-vmseries-tf-1fw-hub-spoke; cd gcp-vmseries-tf-1fw-hub-spoke
+$ git clone https://github.com/wwce/gcp-vmseries-tf-1fw-hub-spoke-lab; cd gcp-vmseries-tf-1fw-hub-spoke-lab
 ```
 
 #### 2. Edit terraform.tfvars

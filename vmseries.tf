@@ -56,19 +56,19 @@ resource "google_compute_route" "route_common" {
 #   value = "http://${module.vmseries_common.nic0_ips["vmseries01"]}"
 # }
 
-output "SSH_NETWORK_C" {
-  value = "ssh ${var.vm_user}@${module.vmseries_common.nic0_ips["vmseries01"]} -i ${trim(var.public_key_path, ".pub")}"
+output "SSH_TO_NETWORK_C" {
+  value = "ssh paloalto@${module.vmseries_common.nic0_ips["vmseries01"]}"
 }
 
 output "VMSERIES_ACCESS" {
   value = "https://${module.vmseries_common.nic1_ips["vmseries01"]}"
 }
 
-output "VMSERIES_USERNAME" {
+output "VM_USERNAME" {
   value = "paloalto"
 }
 
-output "VMSERIES_PASSWORD" {
+output "VM_PASSWORD" {
   value = "Pal0Alt0@123"
 }
 
