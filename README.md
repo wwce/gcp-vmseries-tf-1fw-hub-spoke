@@ -1,4 +1,4 @@
-## VM-Series Network Tags and TCP/UDP Internal Load Balancing
+## Single VM-Series Hub and Spoke Lab
 
 This lab creates a VM-Series firewall to secure inbound, outbound, and east-west traffic for two spoke networks.  The spoke networks (network-a and network-c) are connected to the hub network (network-hub) via VPC Network peering.  Traffic egressing from the spoke networks is routed to the VM-Series trust dataplane interface.  If the destination of a request is an internet resource, the VM-Series will inspect and route the request through its untrust dataplane interface where it will be routed to the untrust network’s internet gateway.  If the destination of the request is an adjacent spoke network (east-west), the VM-Series will inspect and route the request through its trust dataplane interface (hair pin) towards the adjacent network’s peering connection. 
 
